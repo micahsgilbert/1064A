@@ -3,16 +3,31 @@
 // modes = 0: "TANK", 1: "ARCADE", 2: "CUSTOM"
 int mode = 0;
 
+pros::Controller controller(pros::E_CONTROLLER_MASTER);
+pros::Motor left_drive(1);
+pros::Motor right_drive(2, true);
+
 void disabled() {}
 
 void competition_initialize() {}
 
-void autonomous() {}
+void autonomous() {
+  left_drive.move(100);
+  right_drive.move(100);
+  pros::delay(250);
+  left_drive.move(-100);
+  right_drive.move(-100);
+  pros::delay(250);
+  left_drive.move(100);
+  right_drive.move(100);
+  pros::delay(250);
+  left_drive.move(-100);
+  right_drive.move(-100);
+  pros::delay(250);
+}
 
 void opcontrol() {
-	pros::Controller controller(pros::E_CONTROLLER_MASTER);
-	pros::Motor left_drive(1);
-  pros::Motor right_drive(2, true);
+
 
   while(true) {
     // get controller values
