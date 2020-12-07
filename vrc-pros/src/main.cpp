@@ -1,12 +1,38 @@
 #include "main.h"
 
 /*
-MODES
+CONTROLS
+left & right sticks control drive as configured
+up/down buttons control lift. each button toggles between its direction and off
+x/b buttons control intake, same way as lift
+*/
+
+/*
+DRIVE MODES
 0: tank: left stick controls left drive, right stick controls right drive,
 1: arcade: left stick controls all drive
 2: custom: left stick controls l/r, right stick controls f/b
 */
-int drive_mode = 0;
+
+const int drive_mode = 0;
+
+/*
+CONFIGURATION
+lift_speed and intake_speed are the base speeds for the lift and intake, which are multiplied by -1,-,0,1 or 2 as defined by lift_mult and intake_mult.
+debug is debug
+*/
+
+const int lift_speed = 63;
+const int intake_speed = 63;
+
+/*
+DEBUG
+currently just writes motor speeds to the screen
+interval is each iteration, about 10ms
+*/
+
+const bool debug = true;
+const int debug_interval = 50;
 
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
 pros::Motor left_drive(1);
@@ -22,29 +48,100 @@ void disabled() {}
 
 void competition_initialize() {}
 
+void initialize() {
+  pros::lcd::initialize();
+}
+
+void driveFor(int left, int right, int time) {
+  left_drive.move(left);
+  right_drive.move(right);
+  pros::delay(time);
+  left_drive.move(0);
+  right_drive.move(0);
+}
+
+void auton() {
+
+  left_drive.set_brake_mode(MOTOR_BRAKE_BRAKE);
+  right_drive.set_brake_mode(MOTOR_BRAKE_BRAKE);
+
+  // move forward a bit
+  driveFor(100,100,250);
+
+  // deploy top lift
+
+  left_lift.move(63);
+  right_lift.move(63);
+  pros::delay(250);
+  left_lift.move(127);
+  right_lift.move(127);
+
+  // wait for preload to move to top
+  pros::delay(1000);
+
+  // stop lift, move to corner
+  left_lift.move(0);
+  right_lift.move(0);
+
+  // move back
+
+  driveFor(-100,-100,250);
+
+  // rotate left
+
+  driveFor(100,-100,200);
+
+  // move back
+
+  driveFor(-100,-100,500);
+
+  // rotate right
+  
+  driveFor(-100,100,160);
+
+  // move forward
+
+  driveFor(100,100,600);
+
+  
+
+  // rotate left
+
+  // move forward
+
+
+  right_drive.move(0);
+  left_drive.move(0);
+
+  left_drive.set_brake_mode(MOTOR_BRAKE_COAST);
+  right_drive.set_brake_mode(MOTOR_BRAKE_COAST);
+
+
+}
+
 void autonomous() {
-  left_drive.move(100);
-  right_drive.move(100);
-  pros::delay(250);
-  left_drive.move(-100);
-  right_drive.move(-100);
-  pros::delay(250);
-  left_drive.move(100);
-  right_drive.move(100);
-  pros::delay(250);
-  left_drive.move(-100);
-  right_drive.move(-100);
-  pros::delay(250);
+  auton();
+  
+}
+
+void write_debug_to_screen() {
+  int left_lift_vel = (int)left_lift.get_actual_velocity();
+  int right_lift_vel = (int)right_lift.get_actual_velocity();
+
+  pros::lcd::print(0,"Lift Velocities:  L: %i R: %i",(int)left_lift.get_actual_velocity(),(int)right_lift.get_actual_velocity());
 }
 
 void opcontrol() {
 
+  auton();
+
   int left_motor_speed = 0;
   int right_motor_speed = 0;
 
-  int lift_speed = 0;
+  int lift_mult = 0;
+  int intake_mult = 0;
 
-  int intake_speed = 0;
+  uint32_t iter = 0;
 
   while(true) {
 
@@ -70,49 +167,55 @@ void opcontrol() {
 
     // lift
 
-    if (controller.get_digital_new_press(DIGITAL_UP)) {
-      if (lift_speed == 63) {
-        lift_speed = 0;
-      } else {
-        lift_speed = 63;
+    if (controller.get_digital_new_press(DIGITAL_R1)) {
+      if (lift_mult < 2) {
+        lift_mult++;
       }
     }
 
-    if (controller.get_digital_new_press(DIGITAL_DOWN)) {
-      if (lift_speed == -63) {
-        lift_speed = 0;
-      } else {
-        lift_speed = -63;
+    if (controller.get_digital_new_press(DIGITAL_R2)) {
+      if (lift_mult > -2) {
+        lift_mult--;
       }
+    }
+
+    if (controller.get_digital_new_press(DIGITAL_LEFT)) {
+      lift_mult = 0;
     }
 
     // intake
 
     if (controller.get_digital_new_press(DIGITAL_X)) {
-      if (intake_speed == 63) {
-        intake_speed = 0;
+      if (intake_mult == 1) {
+        intake_mult = 0;
       } else {
-        intake_speed = 63;
+        intake_mult = 1;
       }
     }
 
     if (controller.get_digital_new_press(DIGITAL_B)) {
-      if (intake_speed == -63) {
-        intake_speed = 0;
+      if (intake_mult == -1) {
+        intake_mult = 0;
       } else {
-        intake_speed = -63;
+        intake_mult = -1 ;
       }
     }
 
     left_drive.move(left_motor_speed);
     right_drive.move(right_motor_speed);
 
-    left_lift.move(lift_speed);
-    right_lift.move(lift_speed);
+    left_lift.move(lift_speed * lift_mult);
+    right_lift.move(lift_speed * lift_mult);
 
-    left_intake.move(intake_speed);
-    right_intake.move(intake_speed);
+    left_intake.move(intake_speed * intake_mult);
+    right_intake.move(intake_speed * intake_mult);
 
+    iter++;
+
+    if ((iter % 20 == 0) && debug) {
+      write_debug_to_screen();
+    }
+  
     pros::delay(10);
 
   }
