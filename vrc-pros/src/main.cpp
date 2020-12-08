@@ -50,78 +50,75 @@ void competition_initialize() {}
 
 void initialize() {
   pros::lcd::initialize();
-}
-
-void driveFor(int left, int right, int time) {
-  left_drive.move(left);
-  right_drive.move(right);
-  pros::delay(time);
-  left_drive.move(0);
-  right_drive.move(0);
-}
-
-void auton() {
-
   left_drive.set_brake_mode(MOTOR_BRAKE_BRAKE);
   right_drive.set_brake_mode(MOTOR_BRAKE_BRAKE);
+}
 
-  // move forward a bit
-  driveFor(100,100,250);
+int max(int a, int b) {
+  if (a > b) {
+    return a;
+  }
+  return b;
+}
+
+void driveUnits(int left, int right) {
+  left_drive.move_relative(left, 105);
+  right_drive.move_relative(right, 105);
+  pros::delay(max(left, right) * 1.5);
+}
+
+void rotate(int degrees) {
+  driveUnits(degrees * 10, degrees * -10);
+}
+
+void auton(int side) {
+  /*
+  SIDE
+  0: left
+  1: right
+  */
 
   // deploy top lift
 
   left_lift.move(63);
   right_lift.move(63);
-  pros::delay(250);
-  left_lift.move(127);
-  right_lift.move(127);
-
-  // wait for preload to move to top
-  pros::delay(1000);
-
-  // stop lift, move to corner
+  pros::delay(500);
   left_lift.move(0);
   right_lift.move(0);
 
-  // move back
-
-  driveFor(-100,-100,250);
-
-  // rotate left
-
-  driveFor(100,-100,200);
-
-  // move back
-
-  driveFor(-100,-100,500);
-
-  // rotate right
-  
-  driveFor(-100,100,160);
-
   // move forward
 
-  driveFor(100,100,600);
+  driveUnits(2100,2100);
 
-  
+  // rotate
 
-  // rotate left
+  if (side == 0) {
+    rotate(-135);
+  } else {
+    rotate(135);
+  }
 
-  // move forward
+  // move forward up to corner tower
 
+  driveUnits(1600,1600);
+
+  // deploy preload and take in tower ball
+
+  left_lift.move(127);
+  right_lift.move(127);
+  pros::delay(1300);
+  left_lift.move(0);
+  right_lift.move(0);
 
   right_drive.move(0);
   left_drive.move(0);
 
-  left_drive.set_brake_mode(MOTOR_BRAKE_COAST);
-  right_drive.set_brake_mode(MOTOR_BRAKE_COAST);
-
+  pros::delay(4000);
 
 }
 
 void autonomous() {
-  auton();
-  
+  auton(0);
 }
 
 void write_debug_to_screen() {
@@ -132,8 +129,6 @@ void write_debug_to_screen() {
 }
 
 void opcontrol() {
-
-  auton();
 
   int left_motor_speed = 0;
   int right_motor_speed = 0;
