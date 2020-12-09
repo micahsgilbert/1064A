@@ -62,9 +62,9 @@ int max(int a, int b) {
 }
 
 void driveUnits(int left, int right) {
-  left_drive.move_relative(left, 105);
-  right_drive.move_relative(right, 105);
-  pros::delay(max(left, right) * 1.5);
+  left_drive.move_relative(left, 110);
+  right_drive.move_relative(right, 110);
+  pros::delay((int)(max(abs(left), abs(right)) * 1.1) + 50);
 }
 
 void rotate(int degrees) {
@@ -92,21 +92,33 @@ void auton(int side) {
 
   // rotate
 
-  if (side == 0) {
-    rotate(-135);
-  } else {
-    rotate(135);
-  }
+  rotate(-135);
 
   // move forward up to corner tower
 
-  driveUnits(1600,1600);
+  driveUnits(1550,1550);
 
   // deploy preload and take in tower ball
 
   left_lift.move(127);
   right_lift.move(127);
   pros::delay(1300);
+  left_lift.move(0);
+  right_lift.move(0);
+
+  driveUnits(-2000,-2000);
+
+  rotate(-130);
+
+  driveUnits(2200,2200);
+
+  rotate(110); // THIS SHOULD BE 90, BUT THE ROBOT CANNOT ROTATE RIGHT AT THE SAME RATE IT ROTATES LEFT
+
+  driveUnits(1350, 1350);
+
+  left_lift.move(127);
+  right_lift.move(127);
+  pros::delay(2500);
   left_lift.move(0);
   right_lift.move(0);
 
