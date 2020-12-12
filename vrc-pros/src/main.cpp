@@ -44,7 +44,12 @@ pros::Motor right_lift(4);
 pros::Motor left_intake(5);
 pros::Motor right_intake(6, true);
 
-void disabled() {}
+void disabled() {
+  left_drive.move(0);
+  right_drive.move(0);
+  left_lift.move(0);
+  right_lift.move(0);
+}
 
 void competition_initialize() {}
 
@@ -62,9 +67,9 @@ int max(int a, int b) {
 }
 
 void driveUnits(int left, int right) {
-  left_drive.move_relative(left, 110);
-  right_drive.move_relative(right, 110);
-  pros::delay((int)(max(abs(left), abs(right)) * 1.1) + 50);
+  left_drive.move_relative(left, 127);
+  right_drive.move_relative(right, 127);
+  pros::delay((int)(max(abs(left), abs(right)) * 0.8));
 }
 
 void rotate(int degrees) {
@@ -92,11 +97,17 @@ void auton(int side) {
 
   // rotate
 
-  rotate(-135);
+  if (side == 0) {
+    rotate(-140);
+  } else {
+    rotate(152);
+  }
 
   // move forward up to corner tower
 
-  driveUnits(1550,1550);
+  driveUnits(1600,1600);
+  driveUnits(-100,-100);
+  pros::delay(100);
 
   // deploy preload and take in tower ball
 
@@ -106,27 +117,40 @@ void auton(int side) {
   left_lift.move(0);
   right_lift.move(0);
 
+  pros::delay(200);
+
   driveUnits(-2000,-2000);
 
-  rotate(-130);
+  if (side == 0) {
+    rotate(-130);
+  } else {
+    rotate(135);
+  }
+
 
   driveUnits(2200,2200);
 
-  rotate(110); // THIS SHOULD BE 90, BUT THE ROBOT CANNOT ROTATE RIGHT AT THE SAME RATE IT ROTATES LEFT
+  pros::delay(200);
 
-  driveUnits(1350, 1350);
+  if (side == 0) {
+    rotate(120);
+  } else {
+    rotate(-90);
+  }
+
+  driveUnits(1290, 1290); // slams into tower to correct itself for inaccuracies, so back it off a bit before putting ball in
+
+  driveUnits(-200,-200);
+  pros::delay(100);
 
   left_lift.move(127);
   right_lift.move(127);
-  pros::delay(2500);
+  pros::delay(800);
   left_lift.move(0);
   right_lift.move(0);
 
-  right_drive.move(0);
   left_drive.move(0);
-
-  pros::delay(4000);
-
+  right_drive.move(0);
 }
 
 void autonomous() {
