@@ -35,6 +35,7 @@ const bool debug = true;
 const int debug_interval = 50;
 
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
+
 pros::Motor left_drive(1);
 pros::Motor right_drive(2, true);
 
@@ -98,14 +99,14 @@ void auton(int side) {
   // rotate
 
   if (side == 0) {
-    rotate(-140);
+    rotate(-135);
   } else {
     rotate(152);
   }
 
   // move forward up to corner tower
 
-  driveUnits(1600,1600);
+  driveUnits(1670,1670);
   driveUnits(-100,-100);
   pros::delay(100);
 
@@ -133,7 +134,7 @@ void auton(int side) {
   pros::delay(200);
 
   if (side == 0) {
-    rotate(120);
+    rotate(130);
   } else {
     rotate(-90);
   }
@@ -145,7 +146,7 @@ void auton(int side) {
 
   left_lift.move(127);
   right_lift.move(127);
-  pros::delay(800);
+  pros::delay(1200);
   left_lift.move(0);
   right_lift.move(0);
 
