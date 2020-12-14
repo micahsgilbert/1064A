@@ -9,31 +9,6 @@ body {
   margin: 0px;
 }
 
-#quick-links {
-  z-index: 99;
-  position: fixed;
-  right: 16px;
-  bottom: 16px;
-  background-color: rgba(0,0,0,0.9);
-  border-radius: 4px;
-}
-
-#quick-links ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-}
-
-#quick-links li {
-  margin: 16px;
-  text-align: center;
-}
-
-#quick-links a, #quick-links a:active {
-  color: #eeeeee;
-  text-decoration: none;
-}
-
 #gradient-cover {
   width: 100vw;
   height: 64.34vw;
@@ -47,16 +22,14 @@ body {
   left: 0;
   z-index: -1;
   width: 100vw;
-  height: 64.34vw;
 }
 
 #centered-title {
-  margin: 0;
   position: absolute;
-  width: 100%;
   top: 50%;
-  transform: translateY(-50%);
-
+  left: 50%;
+  transform: translate(-50%,-50%);
+  margin: auto;
   text-align: center;
 }
 
