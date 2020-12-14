@@ -56,14 +56,33 @@ body {
   width: 100%;
   top: 50%;
   transform: translateY(-50%);
+
+  text-align: center;
 }
 
 #cover-text {
   font-family: 'Roboto Mono', monospace;
-  text-align: center;
   font-size: 128pt;
   letter-spacing: 48pt;
   margin: 0;
+}
+
+#links {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+}
+
+#links a, #links a:active{
+  color: #eeeeee;
+  text-decoration: none;
+  display: block;
+  font-size: 16pt;
+  margin-top: 32px;
+  padding: 8px;
+  border: 1px solid gray;
+  border-radius: 4px;
+  text-align: center;
 }
 
 #content-main {
