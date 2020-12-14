@@ -36,22 +36,26 @@ body {
 
 #gradient-cover {
   width: 100vw;
-  height: 64.34vw;
+  height: 100vh;
   background: linear-gradient(to bottom, rgba(10,10,10,0), rgba(10,10,10,100));
   position: relative;
 }
 
-#cover-image-container {
+#cover-image {
   position: fixed;
   top: 0;
   left: 0;
   z-index: -1;
   width: 100vw;
-  background-color: #0a0a0a;
+  height: 64.34vw;
 }
 
-#cover-image {
-  width: 100vw;
+#centered-title {
+  margin: 0;
+  position: absolute;
+  width: 100%;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 #cover-text {
@@ -59,12 +63,7 @@ body {
   text-align: center;
   font-size: 128pt;
   letter-spacing: 48pt;
-
   margin: 0;
-  position: absolute;
-  width: 100%;
-  top: 50%;
-  transform: translateY(-50%);
 }
 
 #content-main {
