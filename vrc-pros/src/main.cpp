@@ -1,4 +1,5 @@
 #include "main.h"
+#include "config.h"
 
 /*
 CONTROLS
@@ -6,33 +7,6 @@ left & right sticks control drive as configured
 up/down buttons control lift. each button toggles between its direction and off
 x/b buttons control intake, same way as lift
 */
-
-/*
-DRIVE MODES
-0: tank: left stick controls left drive, right stick controls right drive,
-1: arcade: left stick controls all drive
-2: custom: left stick controls l/r, right stick controls f/b
-*/
-
-const int drive_mode = 0;
-
-/*
-CONFIGURATION
-lift_speed and intake_speed are the base speeds for the lift and intake, which are multiplied by -1,-,0,1 or 2 as defined by lift_mult and intake_mult.
-debug is debug
-*/
-
-const int lift_speed = 63;
-const int intake_speed = 63;
-
-/*
-DEBUG
-currently just writes motor speeds to the screen
-interval is each iteration, about 10ms
-*/
-
-const bool debug = true;
-const int debug_interval = 50;
 
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
@@ -179,14 +153,14 @@ void opcontrol() {
 
     // drive
 
-    if (drive_mode == 0) {
+    if (config::drive_mode == 0) {
       left_motor_speed = controller.get_analog(ANALOG_LEFT_Y);
       right_motor_speed = controller.get_analog(ANALOG_RIGHT_Y);
-    } else if (drive_mode == 1) {
+    } else if (config::drive_mode == 1) {
       int direction = controller.get_analog(ANALOG_LEFT_Y);
       left_motor_speed = (controller.get_analog(ANALOG_LEFT_Y) + direction) / 1.5;
       right_motor_speed = (controller.get_analog(ANALOG_LEFT_Y) - direction) / 1.5;
-    } else if (drive_mode == 2) {
+    } else if (config::drive_mode == 2) {
       int direction = controller.get_analog(ANALOG_LEFT_X);
       left_motor_speed = (controller.get_analog(ANALOG_RIGHT_Y) + direction) / 1.5;
       right_motor_speed = (controller.get_analog(ANALOG_RIGHT_Y) - direction) / 1.5;
@@ -236,15 +210,19 @@ void opcontrol() {
     left_drive.move(left_motor_speed);
     right_drive.move(right_motor_speed);
 
-    left_lift.move(lift_speed * lift_mult);
-    right_lift.move(lift_speed * lift_mult);
+    left_lift.move(config::lift_base_speed * lift_mult);
+    right_lift.move(config::lift_base_speed * lift_mult);
 
-    left_intake.move(intake_speed * intake_mult);
-    right_intake.move(intake_speed * intake_mult);
+    left_intake.move(config::intake_base_speed * intake_mult);
+    right_intake.move(config::intake_base_speed * intake_mult);
 
     iter++;
 
+<<<<<<< Updated upstream
     if ((iter % 20 == 0) && debug) {
+=======
+    if ((iter % config::debug_interval == 0) && config::debug) {
+>>>>>>> Stashed changes
       write_debug_to_screen();
     }
   
