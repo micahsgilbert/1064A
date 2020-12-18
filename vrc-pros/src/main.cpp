@@ -218,11 +218,7 @@ void opcontrol() {
 
     iter++;
 
-<<<<<<< Updated upstream
-    if ((iter % 20 == 0) && debug) {
-=======
     if ((iter % config::debug_interval == 0) && config::debug) {
->>>>>>> Stashed changes
       write_debug_to_screen();
     }
   
