@@ -244,7 +244,7 @@ void opcontrol() {
 
     iter++;
 
-    if ((iter % 20 == 0) && debug) {
+    if ((iter % debug_interval == 0) && debug) {
       write_debug_to_screen();
     }
   
