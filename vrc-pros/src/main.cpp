@@ -1,5 +1,7 @@
 #include "main.h"
 #include "config.h"
+#include "motors.h"
+#include "auton.h"
 
 /*
 CONTROLS
@@ -10,122 +12,19 @@ x/b buttons control intake, same way as lift
 
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
-pros::Motor left_drive(1);
-pros::Motor right_drive(2, true);
-
-pros::Motor left_lift(3, true);
-pros::Motor right_lift(4);
-
-pros::Motor left_intake(5);
-pros::Motor right_intake(6, true);
-
 void disabled() {
-  left_drive.move(0);
-  right_drive.move(0);
-  left_lift.move(0);
-  right_lift.move(0);
+  motors::left_drive.move(0);
+  motors::right_drive.move(0);
+  motors::left_lift.move(0);
+  motors::right_lift.move(0);
 }
 
 void competition_initialize() {}
 
 void initialize() {
   pros::lcd::initialize();
-  left_drive.set_brake_mode(MOTOR_BRAKE_BRAKE);
-  right_drive.set_brake_mode(MOTOR_BRAKE_BRAKE);
-}
-
-int max(int a, int b) {
-  if (a > b) {
-    return a;
-  }
-  return b;
-}
-
-void driveUnits(int left, int right) {
-  left_drive.move_relative(left, 127);
-  right_drive.move_relative(right, 127);
-  pros::delay((int)(max(abs(left), abs(right)) * 0.8));
-}
-
-void rotate(int degrees) {
-  driveUnits(degrees * 10, degrees * -10);
-}
-
-void auton(int side) {
-  /*
-  SIDE
-  0: left
-  1: right
-  */
-
-  // deploy top lift
-
-  left_lift.move(63);
-  right_lift.move(63);
-  pros::delay(500);
-  left_lift.move(0);
-  right_lift.move(0);
-
-  // move forward
-
-  driveUnits(2100,2100);
-
-  // rotate
-
-  if (side == 0) {
-    rotate(-135);
-  } else {
-    rotate(152);
-  }
-
-  // move forward up to corner tower
-
-  driveUnits(1670,1670);
-  driveUnits(-100,-100);
-  pros::delay(100);
-
-  // deploy preload and take in tower ball
-
-  left_lift.move(127);
-  right_lift.move(127);
-  pros::delay(1300);
-  left_lift.move(0);
-  right_lift.move(0);
-
-  pros::delay(200);
-
-  driveUnits(-2000,-2000);
-
-  if (side == 0) {
-    rotate(-130);
-  } else {
-    rotate(135);
-  }
-
-
-  driveUnits(2200,2200);
-
-  pros::delay(200);
-
-  if (side == 0) {
-    rotate(130);
-  } else {
-    rotate(-90);
-  }
-
-  driveUnits(1290, 1290); // slams into tower to correct itself for inaccuracies, so back it off a bit before putting ball in
-
-  driveUnits(-200,-200);
-  pros::delay(100);
-
-  left_lift.move(127);
-  right_lift.move(127);
-  pros::delay(1200);
-  left_lift.move(0);
-  right_lift.move(0);
-
-  left_drive.move(0);
-  right_drive.move(0);
+  motors::left_drive.set_brake_mode(MOTOR_BRAKE_BRAKE);
+  motors::right_drive.set_brake_mode(MOTOR_BRAKE_BRAKE);
 }
 
 void autonomous() {
@@ -133,10 +32,7 @@ void autonomous() {
 }
 
 void write_debug_to_screen() {
-  int left_lift_vel = (int)left_lift.get_actual_velocity();
-  int right_lift_vel = (int)right_lift.get_actual_velocity();
-
-  pros::lcd::print(0,"Lift Velocities:  L: %i R: %i",(int)left_lift.get_actual_velocity(),(int)right_lift.get_actual_velocity());
+  pros::lcd::print(0,"Lift Velocities:  L: %i R: %i",(int)motors::left_lift.get_actual_velocity(),(int)motors::right_lift.get_actual_velocity());
 }
 
 void opcontrol() {
@@ -207,14 +103,14 @@ void opcontrol() {
       }
     }
 
-    left_drive.move(left_motor_speed);
-    right_drive.move(right_motor_speed);
+    motors::left_drive.move(left_motor_speed);
+    motors::right_drive.move(right_motor_speed);
 
-    left_lift.move(config::lift_base_speed * lift_mult);
-    right_lift.move(config::lift_base_speed * lift_mult);
+    motors::left_lift.move(config::lift_base_speed * lift_mult);
+    motors::right_lift.move(config::lift_base_speed * lift_mult);
 
-    left_intake.move(config::intake_base_speed * intake_mult);
-    right_intake.move(config::intake_base_speed * intake_mult);
+    motors::left_intake.move(config::intake_base_speed * intake_mult);
+    motors::right_intake.move(config::intake_base_speed * intake_mult);
 
     iter++;
 
