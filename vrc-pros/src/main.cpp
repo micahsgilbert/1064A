@@ -2,6 +2,7 @@
 #include "config.h"
 #include "motors.h"
 #include "auton.h"
+#include "auton_skills.h"
 
 /*
 CONTROLS
