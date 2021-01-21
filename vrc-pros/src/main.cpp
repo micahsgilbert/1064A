@@ -18,6 +18,8 @@ void disabled() {
   motors::right_drive.move(0);
   motors::left_lift.move(0);
   motors::right_lift.move(0);
+  motors::left_intake.move(0);
+  motors::right_intake.move(0);
 }
 
 void competition_initialize() {}
