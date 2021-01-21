@@ -97,7 +97,7 @@ void opcontrol() {
     }
 
     if (controller.get_digital_new_press(DIGITAL_DOWN)) {
-      if (intake_mult < -1) {
+      if (intake_mult > -1) {
         intake_mult--;
       }
     }
