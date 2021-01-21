@@ -87,7 +87,7 @@ void opcontrol() {
 
     // intake
 
-    if (controller.get_digital_new_press(DIGITAL_X)) {
+    if (controller.get_digital_new_press(DIGITAL_UP)) {
       if (intake_mult == 1) {
         intake_mult = 0;
       } else {
@@ -95,7 +95,7 @@ void opcontrol() {
       }
     }
 
-    if (controller.get_digital_new_press(DIGITAL_B)) {
+    if (controller.get_digital_new_press(DIGITAL_DOWN)) {
       if (intake_mult == -1) {
         intake_mult = 0;
       } else {
