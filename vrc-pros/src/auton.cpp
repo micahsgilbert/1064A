@@ -39,8 +39,10 @@ void auton(int side) {
 
   // rotate
 
+  pros::delay(100);
+
   if (side == 0) {
-    rotate(-135);
+    rotate(-150);
   } else {
     rotate(152);
   }
