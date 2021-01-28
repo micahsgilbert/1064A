@@ -56,13 +56,9 @@ void opcontrol() {
       left_motor_speed = controller.get_analog(ANALOG_LEFT_Y);
       right_motor_speed = controller.get_analog(ANALOG_RIGHT_Y);
     } else if (config::drive_mode == 1) {
-      int direction = controller.get_analog(ANALOG_LEFT_Y);
+      int direction = controller.get_analog(ANALOG_LEFT_X);
       left_motor_speed = (controller.get_analog(ANALOG_LEFT_Y) + direction) / 1.5;
       right_motor_speed = (controller.get_analog(ANALOG_LEFT_Y) - direction) / 1.5;
-    } else if (config::drive_mode == 2) {
-      int direction = controller.get_analog(ANALOG_LEFT_X);
-      left_motor_speed = (controller.get_analog(ANALOG_RIGHT_Y) + direction) / 1.5;
-      right_motor_speed = (controller.get_analog(ANALOG_RIGHT_Y) - direction) / 1.5;
     } else {
       controller.set_text(0, 0, "Unknown mode");
       while(true) {
