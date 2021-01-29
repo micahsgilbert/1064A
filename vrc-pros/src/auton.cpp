@@ -35,7 +35,7 @@ void auton(int side) {
 
   // move forward
 
-  driveUnits(2100,2100);
+  driveUnits(2000,2000);
 
   // rotate
 
@@ -49,8 +49,8 @@ void auton(int side) {
 
   // move forward up to corner tower
 
-  driveUnits(1670,1670);
-  driveUnits(-100,-100);
+  driveUnits(1690,1690);
+  driveUnits(-50,-50);
   pros::delay(100);
 
   // deploy preload and take in tower ball
