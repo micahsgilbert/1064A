@@ -86,16 +86,16 @@ void opcontrol() {
 
     // intake
 
-    if (controller.get_digital_new_press(DIGITAL_UP)) {
-      if (intake_mult < 1) {
-        intake_mult++;
-      }
+    if (controller.get_digital(DIGITAL_L2)) {
+      intake_mult = 1;
     }
 
-    if (controller.get_digital_new_press(DIGITAL_DOWN)) {
-      if (intake_mult > -1) {
-        intake_mult--;
-      }
+    else if (controller.get_digital(DIGITAL_L1)) {
+      intake_mult = -1;
+    }
+
+    else {
+      intake_mult = 0;
     }
 
     motors::left_drive.move(left_motor_speed);

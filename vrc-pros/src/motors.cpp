@@ -8,6 +8,6 @@ namespace motors {
   pros::Motor left_lift(3, true);
   pros::Motor right_lift(4);
 
-  pros::Motor left_intake(5, E_MOTOR_GEARSET_06);
-  pros::Motor right_intake(6, E_MOTOR_GEARSET_06, true);
+  pros::Motor left_intake(5, pros::E_MOTOR_GEARSET_36);
+  pros::Motor right_intake(6, pros::E_MOTOR_GEARSET_36, true);
 }
