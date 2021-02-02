@@ -22,7 +22,7 @@ interval is each iteration, about 10ms
 namespace config {
   int drive_mode = 0;
   int lift_base_speed = 63;
-  int intake_base_speed = 100;
+  int intake_base_speed = 127;
   bool debug = true;
   int debug_interval = 50;
 }
