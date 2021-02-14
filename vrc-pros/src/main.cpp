@@ -11,6 +11,14 @@ up/down buttons control lift. each button toggles between its direction and off
 x/b buttons control intake, same way as lift
 */
 
+void on_left_button() {
+  auton_config::side = 1 - auton_config::side;
+}
+
+void on_center_button() {
+  auton_config::center = !auton_config::center;
+}
+
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
 void disabled() {
@@ -28,17 +36,18 @@ void initialize() {
   pros::lcd::initialize();
   motors::left_drive.set_brake_mode(MOTOR_BRAKE_BRAKE);
   motors::right_drive.set_brake_mode(MOTOR_BRAKE_BRAKE);
+  pros::lcd::register_btn0_cb(on_left_button);
+  pros::lcd::register_btn1_cb(on_center_button);
 }
 
 void autonomous() {
-  auton(0);
-}
-
-void write_debug_to_screen() {
-  pros::lcd::print(0,"Lift Velocities:  L: %i R: %i",(int)motors::left_lift.get_actual_velocity(),(int)motors::right_lift.get_actual_velocity());
+  auton(auton_config::side, auton_config::center);
 }
 
 void opcontrol() {
+
+  //auton(1, true);
+  //auton_skills()
 
   int left_motor_speed = 0;
   int right_motor_speed = 0;
@@ -109,9 +118,20 @@ void opcontrol() {
 
     iter++;
 
-    if ((iter % config::debug_interval == 0) && config::debug) {
-      write_debug_to_screen();
+    pros::lcd::print(7, "[SIDE]      [CENTER]");
+    
+    if (auton_config::side == 0) {
+      pros::lcd::print(0, "LEFT AUTON");
+    } else {
+      pros::lcd::print(0, "RIGHT AUTON");
     }
+
+    if (auton_config::center) {
+      pros::lcd::print(1, "RUN CENTER");
+    } else {
+      pros::lcd::print(1, "DO NOT RUN CENTER");
+    }
+    
   
     pros::delay(10);
 
